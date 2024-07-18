@@ -10,6 +10,7 @@ type UserContextParser struct {
 	Key        string // 存储在context中的名字
 	CookieName string
 	Secret     []byte
+	Domain     string // 支持子域名鉴权
 }
 
 // 默认7天
@@ -19,7 +20,7 @@ func (parser *UserContextParser) Save(c *gin.Context, uc jwt.Claims, keep bool) 
 		maxAge = 0
 	}
 	token, _ := jwt.NewWithClaims(jwt.SigningMethodHS256, uc).SignedString(parser.Secret)
-	c.SetCookie(parser.CookieName, token, maxAge, "/", "", false, false)
+	c.SetCookie(parser.CookieName, token, maxAge, "/", parser.Domain, false, false)
 }
 
 func (parser *UserContextParser) Parse(c *gin.Context, uc jwt.Claims) (ok bool) {
