@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "33673a94-b81a-48b7-a078-269c77551ad4",
+		"name": "ScannerPro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "基础功能",
+			"item": [
+				{
+					"name": "用户登录",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"0000-0000-0000-0000\",\n    \"device\": \"iPhone10,3\",\n    \"system\": \"14.4.1\",\n    \"timezone\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8088/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新通知令牌",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6LTExMTEsInN1YnNfZXhwaXJlc19hdCI6MjUzMzkyNDIyNDAwLCJzdWJzX3BrZ19pZCI6IiJ9.lkO2ClezY4DoC1ZNlzBdlfBqmiEaOFWgFV3cfa2ZaL0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fcm_token\": \"xxxxxx\",\n    \"timezone\": 8\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8088/user/notice/token",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"user",
+								"notice",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "校验支付",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receipt\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8088/purchase/validate",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"purchase",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

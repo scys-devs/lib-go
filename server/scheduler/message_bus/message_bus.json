@@ -1,0 +1,26 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic": false,
+    "properties": {
+      "user_id": {
+        "type": "long"
+      },
+      "xq_group_number": {
+        "type": "long"
+      },
+      "group_id": {
+        "type": "keyword"
+      },
+      "sent": {
+        "type": "integer"
+      },
+      "gmt_create": {
+        "type": "long"
+      }
+    }
+  }
+}
