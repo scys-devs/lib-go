@@ -2,8 +2,8 @@ package lib
 
 import (
 	"compress/gzip"
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -23,6 +23,11 @@ func DoRequest(req *http.Request) (rb []byte, err error) {
 		return
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		err = errors.New(resp.Status)
+		return
+	}
 
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
