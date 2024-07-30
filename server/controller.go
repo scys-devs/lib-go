@@ -80,6 +80,8 @@ func SendErr(c *gin.Context, err error) {
 		if err == nil {
 		} else if strings.Contains(err.Error(), "Duplicate entry") {
 			m = "数据重复"
+		} else if strings.HasPrefix(err.Error(), "err:") {
+			m = err.Error()
 		} else {
 			m = "发生未知错误"
 		}
