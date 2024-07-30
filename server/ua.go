@@ -17,10 +17,14 @@ const (
 	UserAgentXQ
 )
 
+func UserAgent(c *gin.Context) string {
+	return strings.ToLower(c.GetHeader("User-Agent"))
+}
+
 func UserAgentDetect(c *gin.Context, typ UserAgentDetector) bool {
 	var curr = UserAgentDetector(c.GetInt("UserAgentDetector"))
 	if curr == 0 {
-		ua := strings.ToLower(c.GetHeader("User-Agent"))
+		ua := UserAgent(c)
 		if len(mobileRe.FindString(ua)) > 0 {
 			curr |= UserAgentMobile
 		} else {
