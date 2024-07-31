@@ -146,6 +146,22 @@ func Difference[T constraints.Ordered](a, b []T) (ll []T) {
 	return
 }
 
+// Intersection a与b的交集
+func Intersection[T constraints.Ordered](a, b []T) (ll []T) {
+	m := make(map[T]struct{})
+
+	for _, v := range b {
+		m[v] = struct{}{}
+	}
+
+	for _, v := range a {
+		if _, ok := m[v]; ok { // A中有 B中也有
+			ll = append(ll, v)
+		}
+	}
+	return
+}
+
 func Contains[T comparable](elems []T, v T) bool {
 	for _, s := range elems {
 		if v == s {
