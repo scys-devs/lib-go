@@ -73,19 +73,27 @@ func SendOK(c *gin.Context, data interface{}) {
 	Send(c, 0, message, data)
 }
 
+type E struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (e *E) Error() string {
+	return e.Message
+}
+
 func SendErr(c *gin.Context, err error) {
-	m, ok := c.Value(SendKeyMessage).(string)
-	AccessLogger.Errorw("handler request", "err", err, "uri", c.Request.RequestURI, "message", m, "user", c.Value(KeyUser))
-	if !ok { // 尝试处理下常见错误
-		if err == nil {
-		} else if strings.Contains(err.Error(), "Duplicate entry") {
-			m = "数据重复"
-		} else if strings.HasPrefix(err.Error(), "err:") {
-			m = err.Error()
-		} else {
-			m = "发生未知错误"
-		}
+	if e, ok := err.(*E); ok {
+		Send(c, e.Code, e.Message, nil)
+		return
 	}
+
+	m, ok := c.Value(SendKeyMessage).(string)
+	if !ok {
+		m = "发生未知错误"
+	}
+
+	AccessLogger.Errorw("handler request", "err", err, "uri", c.Request.RequestURI, "message", m, "user", c.Value(KeyUser))
 
 	Send(c, -1, m, nil)
 }
