@@ -82,19 +82,19 @@ func (e *E) Error() string {
 	return e.Message
 }
 
-func SendErr(c *gin.Context, err error) {
+func SendErr(c *gin.Context, err error, message ...string) {
 	if e, ok := err.(*E); ok {
+		if len(message) > 0 {
+			e.Message = message[0]
+		}
 		Send(c, e.Code, e.Message, nil)
 		return
 	}
-
 	m, ok := c.Value(SendKeyMessage).(string)
 	if !ok {
 		m = "发生未知错误"
 	}
-
 	AccessLogger.Errorw("handler request", "err", err, "uri", c.Request.RequestURI, "message", m, "user", c.Value(KeyUser))
-
 	Send(c, -1, m, nil)
 }
 
