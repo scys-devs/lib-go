@@ -172,14 +172,18 @@ func (s *scheduler) runForCMD() {
 		var err = errors.New("not found")
 		for _, ex := range s.executorList {
 			if ex.Name() == name {
-				uid, _ := uuid.NewV4()
-				c := &Context{Logger: log.With("name", ex.Name(), "uuid", uid.String())}
+				c := NewSchedulerContext(ex.Name())
 				err = ex.Process(c)
 			}
 		}
 		fmt.Println(s.Now().Format("20060102"), "complete", err)
 	}
 	os.Exit(0)
+}
+
+func NewSchedulerContext(name string) *Context {
+	uid, _ := uuid.NewV4()
+	return &Context{Logger: log.With("name", name, "uuid", uid.String())}
 }
 
 func (s *scheduler) run(ex Executor) {
