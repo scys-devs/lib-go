@@ -64,6 +64,14 @@ func (do *TablePagination) ToLimit() string {
 	return fmt.Sprintf(` limit %v offset %v`, do.PerPage, (do.Page-1)*do.PerPage)
 }
 
+func (do *TablePagination) ToCndPage() int {
+	if do.Page == 0 {
+		return 0
+	} else {
+		return do.Page - 1
+	}
+}
+
 func (do *TablePagination) ToExport() {
 	do.PerPage = -1
 }
