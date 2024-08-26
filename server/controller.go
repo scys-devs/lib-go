@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
@@ -184,7 +185,13 @@ window.location.href="%v";
 func ClearCookie(c *gin.Context, prefix string) {
 	for _, cookie := range c.Request.Cookies() {
 		if strings.HasPrefix(cookie.Name, prefix) {
-			c.SetCookie(cookie.Name, "", 0, "/", "", false, true)
+			c.SetCookie(cookie.Name, "", 0, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		}
 	}
+}
+
+func ProxyRequest(c *gin.Context, host string) {
+	proxyUrl, _ := url.Parse(host)
+	proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
+	proxy.ServeHTTP(c.Writer, c.Request)
 }
