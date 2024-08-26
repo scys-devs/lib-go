@@ -190,8 +190,9 @@ func ClearCookie(c *gin.Context, prefix string) {
 	}
 }
 
-func ProxyRequest(c *gin.Context, host string) {
+func ProxyRequest(c *gin.Context, host, path string) {
 	proxyUrl, _ := url.Parse(host)
 	proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
+	c.Request.URL.Path = path
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
