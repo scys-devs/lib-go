@@ -25,7 +25,9 @@ func UserAgentDetect(c *gin.Context, typ UserAgentDetector) bool {
 	var curr = UserAgentDetector(c.GetInt("UserAgentDetector"))
 	if curr == 0 {
 		ua := UserAgent(c)
-		if len(mobileRe.FindString(ua)) > 0 {
+		if strings.Contains(ua, "ipad") {
+			curr |= UserAgentPC
+		} else if len(mobileRe.FindString(ua)) > 0 {
 			curr |= UserAgentMobile
 		} else {
 			curr |= UserAgentPC
