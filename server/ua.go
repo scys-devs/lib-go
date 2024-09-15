@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var mobileRe, _ = regexp.Compile("(?i:Mobile|iPhone|Android|Opera Mini|UCWEB)")
+var mobileRe, _ = regexp.Compile("(?i:Mobile|iPod|iPhone|Android|Opera Mini|UCWEB)")
 
 type UserAgentDetector int
 
