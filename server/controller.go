@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"fmt"
+	"github.com/xuri/excelize/v2"
 	"io"
 	"io/ioutil"
 	"mime"
@@ -16,7 +17,6 @@ import (
 	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
 	"github.com/scys-devs/lib-go/conn"
-	"github.com/xuri/excelize/v2"
 )
 
 // 支持外部自定义参数
@@ -185,6 +185,7 @@ window.location.href="%v";
 func ClearCookie(c *gin.Context, prefix string) {
 	for _, cookie := range c.Request.Cookies() {
 		if strings.HasPrefix(cookie.Name, prefix) {
+			// 傻逼框架，maxAge=0 的时候设置成了 session，-1 才可以删除 cookie
 			c.SetCookie(cookie.Name, "", 0, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		}
 	}
