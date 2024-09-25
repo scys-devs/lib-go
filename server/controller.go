@@ -186,7 +186,7 @@ func ClearCookie(c *gin.Context, prefix string) {
 	for _, cookie := range c.Request.Cookies() {
 		if strings.HasPrefix(cookie.Name, prefix) {
 			// 傻逼框架，maxAge=0 的时候设置成了 session，-1 才可以删除 cookie
-			c.SetCookie(cookie.Name, "", 0, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
+			c.SetCookie(cookie.Name, "", -1, cookie.Path, cookie.Domain, cookie.Secure, cookie.HttpOnly)
 		}
 	}
 }
