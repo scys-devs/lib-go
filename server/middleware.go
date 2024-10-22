@@ -2,7 +2,15 @@ package server
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/foolin/goview"
+	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
+	"github.com/scys-devs/lib-go/conn"
+	"html/template"
+	"io/fs"
+	"net/http"
+	"os"
+	"strings"
 )
 
 // UserContextParser 用于处理用户信息
@@ -43,4 +51,38 @@ func (parser *UserContextParser) ParseFromString(cookie string, uc jwt.Claims) (
 		ok = true
 	}
 	return
+}
+
+func NewRender(dir string, funcMap template.FuncMap) gin.HandlerFunc {
+	partials, _ := fs.Glob(os.DirFS(dir), "partial/*.gohtml")
+	// 去除partial后缀
+	for i := range partials {
+		partials[i] = strings.TrimSuffix(partials[i], ".gohtml")
+	}
+	return ginview.NewMiddleware(goview.Config{
+		Root:         dir,
+		Master:       "layout/base",
+		Extension:    ".gohtml",
+		Partials:     partials,
+		Funcs:        funcMap,
+		DisableCache: len(conn.ENV) > 0,
+		Delims:       goview.Delims{Left: "{{", Right: "}}"},
+	})
+}
+
+func CORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var origin = c.Request.Header.Get("Origin")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, X-TOKEN, X-XSRF-TOKEN") // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
 }

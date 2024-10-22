@@ -2,13 +2,6 @@ package server
 
 import (
 	"fmt"
-	"html/template"
-	"io/fs"
-	"os"
-	"strings"
-
-	"github.com/foolin/goview"
-	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
 	"github.com/scys-devs/lib-go"
 	"github.com/scys-devs/lib-go/conn"
@@ -40,26 +33,10 @@ func Router(cc ...Controller) {
 	}
 }
 
-func NewRender(dir string, funcMap template.FuncMap) gin.HandlerFunc {
-	partials, _ := fs.Glob(os.DirFS(dir), "partial/*.gohtml")
-	// 去除partial后缀
-	for i := range partials {
-		partials[i] = strings.TrimSuffix(partials[i], ".gohtml")
-	}
-	return ginview.NewMiddleware(goview.Config{
-		Root:         dir,
-		Master:       "layout/base",
-		Extension:    ".gohtml",
-		Partials:     partials,
-		Funcs:        funcMap,
-		DisableCache: len(conn.ENV) > 0,
-		Delims:       goview.Delims{Left: "{{", Right: "}}"},
-	})
-}
-
 func Run(port string) {
 	Scheduler.Start()
 
+	Engine.ForwardedByClientIP = true
 	Engine.Use(gin.Recovery())
 	Engine.Static(RouterPrefix+RouterStatic, "./static")
 	gin.SetMode(gin.ReleaseMode)
