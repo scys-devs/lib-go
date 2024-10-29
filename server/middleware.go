@@ -72,7 +72,8 @@ func NewRender(dir string, funcMap template.FuncMap) gin.HandlerFunc {
 
 func CORS(headers ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		headers = append(headers, "Accept", "Content-Type", "X-TOKEN", "X-XSRF-TOKEN")
+		_header := []string{"Accept", "Content-Type", "X-TOKEN", "X-XSRF-TOKEN"}
+		_header = append(_header, headers...)
 
 		var origin = c.Request.Header.Get("Origin")
 		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
