@@ -77,7 +77,7 @@ func CORS(headers ...string) gin.HandlerFunc {
 
 		var origin = c.Request.Header.Get("Origin")
 		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-		c.Writer.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ", ")) // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
+		c.Writer.Header().Set("Access-Control-Allow-Headers", strings.Join(_header, ", ")) // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 
