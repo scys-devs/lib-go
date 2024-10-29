@@ -70,11 +70,13 @@ func NewRender(dir string, funcMap template.FuncMap) gin.HandlerFunc {
 	})
 }
 
-func CORS() gin.HandlerFunc {
+func CORS(headers ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		headers = append(headers, "Accept", "Content-Type", "X-TOKEN", "X-XSRF-TOKEN")
+
 		var origin = c.Request.Header.Get("Origin")
 		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, X-TOKEN, X-XSRF-TOKEN") // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
+		c.Writer.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ", ")) // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 

@@ -39,11 +39,12 @@ func Run(port string) {
 	Engine.ForwardedByClientIP = true
 	Engine.Use(gin.Recovery())
 	Engine.Static(RouterPrefix+RouterStatic, "./static")
-	gin.SetMode(gin.ReleaseMode)
 
 	// 开发环境特殊配置
 	if len(conn.ENV) > 0 {
 		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	// TODO 测试下pm2和平滑重启的兼容性
