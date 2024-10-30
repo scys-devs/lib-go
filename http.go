@@ -13,6 +13,7 @@ import (
 )
 
 var json = jsoniter.ConfigFastest
+var StatusOK = 300
 
 func DoRequest(req *http.Request) (rb []byte, err error) {
 	if req == nil {
@@ -24,7 +25,7 @@ func DoRequest(req *http.Request) (rb []byte, err error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode >= StatusOK {
 		err = errors.New(resp.Status)
 		return
 	}
