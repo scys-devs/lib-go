@@ -2,11 +2,13 @@ package lib
 
 import (
 	"fmt"
-	"github.com/lestrrat-go/file-rotatelogs"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"path"
+	"time"
+
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func NewRotateLog(name string, option ...rotatelogs.Option) *rotatelogs.RotateLogs {
@@ -31,7 +33,20 @@ func GetLogger(name string) *zap.SugaredLogger {
 	var enc = zap.NewProductionEncoderConfig()
 	var level = zap.DebugLevel
 	core := zapcore.NewCore(zapcore.NewJSONEncoder(enc), w, level)
-	return zap.New(core, zap.AddCaller()).Sugar()
+	// 创建带有动态时间字段的 logger
+	logger := zap.New(core, zap.AddCaller()).With(
+		zap.String("formatted_time", time.Now().Format("2006-01-02 15:04:05")),
+	)
+
+	// 添加动态时间字段
+	logger = logger.WithOptions(zap.Hooks(func(entry zapcore.Entry) error {
+		logger.Core().With([]zapcore.Field{
+			zap.String("formatted_time", entry.Time.Format("2006-01-02 15:04:05")),
+		})
+		return nil
+	}))
+
+	return logger.Sugar()
 }
 
 // 适用于可读日志
