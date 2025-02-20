@@ -9,7 +9,7 @@ import (
 )
 
 func get(i int) {
-	conn.ResignCacheFromRedis(conn.FormatKey("test:%v", i), 2, func() (string, error) {
+	ResignCacheFromRedis(FormatKey("test:%v", i), 2, func() (string, error) {
 		return fmt.Sprint(i), nil
 	})
 }

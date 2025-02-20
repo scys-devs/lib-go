@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"github.com/scys-devs/lib-go/conn"
 	"github.com/scys-devs/lib-go/server"
 )
 
@@ -24,6 +23,6 @@ func (*Updater) NextDuration() int64 {
 }
 
 func (e *Updater) Process(ctx *server.Context) (err error) {
-	conn.CacheUpdater.Update()
+	CacheUpdater.Update()
 	return
 }
