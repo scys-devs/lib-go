@@ -3,11 +3,12 @@ package lib
 import (
 	"compress/gzip"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -129,4 +130,38 @@ func GetRedirectURL(raw string) string {
 		}
 	}
 	return ""
+}
+
+// 新的http请求方法，对异常进行return
+func DoRequestHasErrMsg(req *http.Request) (rb []byte, err error) {
+	if req == nil {
+		return nil, errors.New("no request")
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	httpResponseStatus := resp.StatusCode >= 300
+
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		r, _ := gzip.NewReader(resp.Body)
+		defer r.Close()
+		respTmp, errTmp := io.ReadAll(r)
+
+		if httpResponseStatus {
+			err = errors.New(string(respTmp))
+			return
+		}
+		return respTmp, errTmp
+	default:
+		respTmp, errTmp := io.ReadAll(resp.Body)
+		if httpResponseStatus {
+			err = errors.New(string(respTmp))
+			return
+		}
+		return respTmp, errTmp
+	}
 }
